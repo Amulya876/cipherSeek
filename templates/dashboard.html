@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrivSeek Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<input type="hidden" id="userId" value="{{ request.form.user_id }}">
+<input type="hidden" id="password" value="{{ request.form.password }}">
+
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">🔐</div>
+            <h1 class="logo-text">PrivSeek</h1>
+        </div>
+
+        <nav class="sidebar-menu">
+            <a href="#" class="menu-item active">
+                <span class="menu-icon">🔍</span>
+                <span>Dashboard</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <a href="/" class="btn-logout">Logout</a>
+        </div>
+    </div>
+
+    <!-- Main -->
+    <div class="main-content">
+        <div class="dashboard-header">
+            <h2>Dashboard</h2>
+            <div class="user-profile">👤</div>
+        </div>
+
+        <div class="dashboard-content">
+
+            <!-- SEARCH -->
+            <div class="dashboard-section">
+                <div class="search-card">
+                    <h3>🔍 Secure Search</h3>
+
+                    <div class="search-input-group">
+                        <input type="text" id="searchBox" placeholder="Enter keyword..." class="search-input">
+                        <button class="btn-search" onclick="searchKeyword()">Search</button>
+                    </div>
+
+                    <div id="result"></div>
+                </div>
+            </div>
+
+            <!-- UPLOAD -->
+            <div class="dashboard-section">
+                <div class="search-card">
+                    <h3>📤 Upload File</h3>
+
+                    <input type="file" id="fileInput" class="input-field">
+                    <button class="btn-primary" onclick="uploadFile()">Upload</button>
+
+                    <div id="uploadStatus"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+
+function uploadFile() {
+
+    const user_id = document.getElementById("userId").value;
+    const password = document.getElementById("password").value;
+    const file = document.getElementById("fileInput").files[0];
+
+    if (!file) {
+        alert("Select a file first");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("user_id", user_id);
+    formData.append("password", password);
+    formData.append("file", file);
+
+    fetch("/upload", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.error) {
+            document.getElementById("uploadStatus").innerHTML =
+                `<p style="color:red">${data.error}</p>`;
+        } else {
+            document.getElementById("uploadStatus").innerHTML =
+                `<p style="color:green">File uploaded successfully!</p>`;
+        }
+    })
+    .catch(err => {
+        document.getElementById("uploadStatus").innerHTML =
+            `<p style="color:red">Upload failed</p>`;
+    });
+}
+
+
+
+function searchKeyword() {
+
+    const user_id = document.getElementById("userId").value;
+    const password = document.getElementById("password").value;
+    const keyword = document.getElementById("searchBox").value;
+
+    if (!keyword) {
+        alert("Enter keyword");
+        return;
+    }
+
+    fetch("/search", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            user_id: user_id,
+            password: password,
+            keyword: keyword
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        if (data.error) {
+            document.getElementById("result").innerHTML =
+                `<p style="color:red">${data.error}</p>`;
+            return;
+        }
+
+        if (!data.documents.length) {
+            document.getElementById("result").innerHTML =
+                `<p>No documents found</p>`;
+            return;
+        }
+
+        let html = "<h4>Documents Found:</h4><ul>";
+
+        data.documents.forEach(doc => {
+            html += `
+                <li>
+                    ${doc.document_id}
+                    <button onclick="downloadFile('${doc.document_id}')">
+                        Download
+                    </button>
+                </li>
+            `;
+        });
+
+        html += "</ul>";
+
+        document.getElementById("result").innerHTML = html;
+    });
+}
+
+
+
+function downloadFile(document_id) {
+
+    const user_id = document.getElementById("userId").value;
+    const password = document.getElementById("password").value;
+
+    fetch("/download/" + document_id, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            user_id: user_id,
+            password: password
+        })
+    })
+    .then(response => response.blob())
+    .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = document_id;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+    });
+}
+
+</script>
+
+</body>
+</html>

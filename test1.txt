@@ -1,0 +1,123 @@
+PATIENT MEDICAL RECORD - DEMO FILE
+
+=====================================================
+Hospital Name: City Medical Center
+Date: February 21, 2026
+Record ID: HAL-DEMO-001
+=====================================================
+
+PATIENT INFORMATION:
+Name: John Smith (Demo Patient)
+Age: 58
+Gender: Male
+Medical Record Number: 123456
+Admission Date: February 15, 2026
+
+CHIEF COMPLAINT:
+Persistent cough, shortness of breath, and chest pain
+
+HISTORY OF PRESENT ILLNESS:
+Patient is a 58-year-old male with a 40 pack-year smoking history
+presenting with persistent cough lasting 3 weeks, progressive shortness
+of breath, and occasional chest pain. Patient reports weight loss of
+5 kg over the past month.
+
+PAST MEDICAL HISTORY:
+- Chronic Obstructive Pulmonary Disease (COPD)
+- Hypertension (controlled with medication)
+- Type 2 Diabetes Mellitus
+- Hyperlipidemia
+
+PHYSICAL EXAMINATION:
+- Blood Pressure: 145/92 mmHg
+- Heart Rate: 88 bpm
+- Respiratory Rate: 22 breaths/min
+- Temperature: 37.2°C
+- Oxygen Saturation: 89% (room air)
+- Lung auscultation: Decreased breath sounds bilaterally
+
+DIAGNOSTIC IMAGING:
+CT Chest with Contrast (February 18, 2026):
+- 5.8 cm mass in left upper lobe
+- Mediastinal lymphadenopathy
+- Pleural effusion on left side (approximately 600 mL)
+- No evidence of distant metastases
+
+PET Scan (February 20, 2026):
+- Hypermetabolic activity in left upper lobe mass
+- Regional lymph node involvement
+- SUV max: 8.2 (suggestive of malignancy)
+
+LABORATORY RESULTS:
+- CBC: Mild anemia, WBC normal
+- Comprehensive Metabolic Panel: Within normal limits
+- Tumor Markers: CEA 12.5 ng/mL (elevated)
+
+PATHOLOGY:
+Lung Biopsy (Transbronchial) - February 19, 2026:
+Diagnosis: Adenocarcinoma of lung, non-small cell type (NSCLC)
+Grade: Moderately differentiated
+Mitotic count: 7 per 10 high power fields
+Ki-67 index: 35%
+
+IMMUNOHISTOCHEMISTRY:
+- TTF-1: Positive
+- CK7: Positive
+- CK20: Negative
+- EGFR Mutation: Positive (activating mutation)
+- ALK Status: Negative
+
+TUMOR STAGING (TNM Classification):
+- T: 3 (tumor >3cm, invasion into chest wall)
+- N: 2 (ipsilateral mediastinal lymphadenopathy)
+- M: 0 (no distant metastases)
+- Overall Stage: IIIA (locally advanced)
+
+TREATMENT PLAN:
+Phase 1 - Chemotherapy:
+- Regimen: Cisplatin 75 mg/m² + Pemetrexed 500 mg/m²
+- Schedule: Every 3 weeks for 4 cycles
+- Start Date: February 28, 2026
+- Expected completion: June 2026
+
+Phase 2 - Radiation Therapy (if residual disease):
+- Dose: 60 Gy in 30 fractions
+- Planned target: Left upper lobe and mediastinal lymph nodes
+- Expected dates: July-August 2026
+
+Phase 3 - Maintenance Therapy:
+- Pemetrexed continuation therapy for up to 2 additional years
+- Close monitoring with CT imaging every 3 months
+
+PROGNOSIS:
+5-year overall survival with multi-modality treatment: 20-30%
+Patient counseled on treatment risks and benefits
+Alternative treatment options discussed
+
+MEDICATIONS:
+- Cisplatin (chemotherapy)
+- Pemetrexed (chemotherapy)
+- Ondansetron (anti-nausea)
+- Dexamethasone (corticosteroid)
+- Supportive care medications
+
+PATIENT EDUCATION:
+- Smoking cessation counseling provided
+- Nutrition counseling recommended
+- Fatigue management strategies discussed
+- Support group referrals provided
+- Advance directive discussion completed
+
+FOLLOW-UP CARE:
+- Oncology clinic: Every 3 weeks during chemotherapy
+- CT imaging: Post-treatment (July 2026)
+- Pulmonology: As needed for respiratory symptoms
+- Primary Care: Monthly monitoring
+
+KEYWORDS EXTRACTED FOR SEARCH:
+cancer, lung, chemotherapy, cisplatin, pemetrexed, nsclc, adenocarcinoma,
+malignant, tumor, diagnosis, treatment, prognosis, oncology, biopsy,
+radiotherapy, imaging, clinical, patient, medical, research, healthcare,
+therapy, medication, hospital, physician, respiratory, pulmonology,
+disease, metastases, lymph, nodes, staging, ttf, ck7, egfr, mutation,
+ki67, immunohistochemistry
