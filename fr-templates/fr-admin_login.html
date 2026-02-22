@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrivSeek - Admin Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="login-container">
+        <!-- Left Side - Branding -->
+        <div class="login-brand">
+            <div class="brand-content">
+                <div class="brand-icon">🔐</div>
+                <h1>PrivSeek</h1>
+                <p>Your Privacy, Your Security</p>
+                <div class="features-list">
+                    <div class="feature-item">
+                        <span class="feature-icon">⚙️</span>
+                        <span>System Management</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">📊</span>
+                        <span>Analytics</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">🛡️</span>
+                        <span>Security Control</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side - Login/Register Form -->
+        <div class="login-form-container">
+            <div class="form-wrapper">
+                <!-- Login Card -->
+                <div class="form-card" id="loginCard">
+                    <span class="role-badge admin-role">👨‍💼 Admin Login</span>
+                    <h2>Admin Access</h2>
+                    <p class="form-subtitle">Sign in to your admin account</p>
+                    
+                    <form method="POST" action="/admin-login" class="auth-form">
+                        <div class="form-group">
+                            <input type="email" name="email" placeholder="Admin Email Address" required>
+                            <span class="input-icon">✉️</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" name="password" placeholder="Admin Password" required>
+                            <span class="input-icon">🔑</span>
+                        </div>
+                        <button type="submit" class="btn-primary">Admin Sign In</button>
+                    </form>
+
+                    <div class="form-divider">
+                        <span>No admin account?</span>
+                    </div>
+
+                    <button class="btn-link" onclick="toggleForms()">Create an admin account</button>
+                    <a href="/" class="btn-link" style="display: block; margin-top: 10px;">Back to Login Choice</a>
+                </div>
+
+                <!-- Register Card -->
+                <div class="form-card hidden" id="registerCard">
+                    <span class="role-badge admin-role">👨‍💼 Admin Registration</span>
+                    <h2>Create Admin Account</h2>
+                    <p class="form-subtitle">Register as an admin (Restricted)</p>
+                    
+                    <form method="POST" action="/admin-register" class="auth-form">
+                        <div class="form-group">
+                            <input type="text" name="name" placeholder="Full Name" required>
+                            <span class="input-icon">👤</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" name="email" placeholder="Admin Email Address" required>
+                            <span class="input-icon">✉️</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" name="password" placeholder="Admin Password" required>
+                            <span class="input-icon">🔑</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="admin_key" placeholder="Admin Registration Key" required>
+                            <span class="input-icon">🔑</span>
+                        </div>
+                        <button type="submit" class="btn-primary">Create Admin Account</button>
+                    </form>
+
+                    <div class="form-divider">
+                        <span>Already an admin?</span>
+                    </div>
+
+                    <button class="btn-link" onclick="toggleForms()">Sign in instead</button>
+                    <a href="/" class="btn-link" style="display: block; margin-top: 10px;">Back to Login Choice</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleForms() {
+            const loginCard = document.getElementById('loginCard');
+            const registerCard = document.getElementById('registerCard');
+            
+            loginCard.classList.toggle('hidden');
+            registerCard.classList.toggle('hidden');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrivSeek Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">🔐</div>
+                <h1 class="logo-text">PrivSeek</h1>
+            </div>
+            
+            <nav class="sidebar-menu">
+                <a href="#" class="menu-item active">
+                    <span class="menu-icon">🔍</span>
+                    <span>Dashboard</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="/logout" class="btn-logout">Logout</a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="dashboard-header">
+                <h2 id="page-title">Dashboard</h2>
+                <div class="user-profile">
+                    <span class="user-avatar">👤</span>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="dashboard-content">
+                <!-- Unified Dashboard Page -->
+                <div class="unified-dashboard">
+                    <!-- Secure Search Section -->
+                    <div class="dashboard-section">
+                        <div class="search-card">
+                            <div class="search-header">
+                                <h3>🔍 Secure Search Engine</h3>
+                                <p>Search with powerful spell correction and privacy protection</p>
+                            </div>
+
+                            <div class="search-input-group">
+                                <input type="text" id="searchBox" placeholder="Type your query or use voice search..." class="search-input">
+                                <button class="btn-voice" onclick="startVoice()" title="Use Voice Search">🎤</button>
+                                <button class="btn-search" onclick="searchKeyword()">Search</button>
+                            </div>
+
+                            <div class="search-result" id="result"></div>
+
+                            <div class="search-info">
+                                <div class="info-box">
+                                    <span class="info-icon">🛡️</span>
+                                    <div>
+                                        <h4>Privacy Protected</h4>
+                                        <p>Your searches are secure and encrypted</p>
+                                    </div>
+                                </div>
+                                <div class="info-box">
+                                    <span class="info-icon">✨</span>
+                                    <div>
+                                        <h4>Smart Correction</h4>
+                                        <p>Automatic spell checking and correction</p>
+                                    </div>
+                                </div>
+                                <div class="info-box">
+                                    <span class="info-icon">🎯</span>
+                                    <div>
+                                        <h4>Accurate Results</h4>
+                                        <p>Get better search results with AI</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Upload Files Section -->
+                    <div class="dashboard-section">
+                        <div class="search-card">
+                            <div class="search-header">
+                                <h3>📤 Upload Files</h3>
+                                <p>Upload and manage your files securely</p>
+                            </div>
+
+                            <div class="upload-section">
+                                <div class="upload-box" id="uploadBox">
+                                    <div class="upload-icon">📁</div>
+                                    <h4>Drag and drop files here</h4>
+                                    <p>or click to select files</p>
+                                    <input type="file" id="fileInput" multiple hidden>
+                                </div>
+
+                                <div class="upload-form">
+                                    <input type="text" id="fileName" placeholder="Enter file name or description" class="input-field">
+                                    <div class="encryption-checkbox">
+                                        <input type="checkbox" id="encryptFile" name="encryptFile">
+                                        <label for="encryptFile">Encrypt this file 🔒</label>
+                                    </div>
+                                    <button class="btn-primary" onclick="uploadFile()">Upload Successfully</button>
+                                </div>
+
+                                <div id="uploadStatus" class="upload-status"></div>
+
+                                <div id="uploadedFiles" class="uploaded-files">
+                                    <h4>Uploaded Files</h4>
+                                    <div class="files-list" id="filesList">
+                                        <p class="no-files">No files uploaded yet</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let uploadedFilesList = [];
+
+        // File Upload Functionality
+        const uploadBox = document.getElementById('uploadBox');
+        const fileInput = document.getElementById('fileInput');
+
+        uploadBox.addEventListener('click', () => fileInput.click());
+
+        uploadBox.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadBox.style.background = 'rgba(31, 77, 143, 0.1)';
+            uploadBox.style.borderColor = '#1f4d8f';
+        });
+
+        uploadBox.addEventListener('dragleave', () => {
+            uploadBox.style.background = '';
+            uploadBox.style.borderColor = '';
+        });
+
+        uploadBox.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadBox.style.background = '';
+            uploadBox.style.borderColor = '';
+            const files = e.dataTransfer.files;
+            handleFiles(files);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+
+        function handleFiles(files) {
+            const fileName = document.getElementById('fileName');
+            if (files.length > 0) {
+                fileName.value = files[0].name;
+            }
+        }
+
+        function uploadFile() {
+            const fileName = document.getElementById('fileName').value;
+            const fileInputElement = document.getElementById('fileInput');
+            const isEncrypted = document.getElementById('encryptFile').checked ? 1 : 0;
+            
+            if (!fileName.trim()) {
+                alert('Please enter a file name or description');
+                return;
+            }
+
+            if (fileInputElement.files.length === 0) {
+                alert('Please select a file first');
+                return;
+            }
+
+            const file = fileInputElement.files[0];
+            const fileSize = (file.size / 1024 / 1024).toFixed(2);
+
+            // Send to backend
+            const formData = new FormData();
+            formData.append('filename', fileName);
+            formData.append('description', fileName);
+            formData.append('is_encrypted', isEncrypted);
+            formData.append('file_size', fileSize);
+
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Add to uploaded files list
+                    uploadedFilesList.push({
+                        name: fileName,
+                        originalName: file.name,
+                        size: fileSize,
+                        date: new Date().toLocaleDateString(),
+                        time: new Date().toLocaleTimeString(),
+                        encrypted: isEncrypted
+                    });
+
+                    // Show success message
+                    const statusDiv = document.getElementById('uploadStatus');
+                    statusDiv.innerHTML = `
+                        <div class="success-message">
+                            <span class="success-icon">✅</span>
+                            <span>File uploaded successfully${isEncrypted ? ' and encrypted' : ''}!</span>
+                        </div>
+                    `;
+
+                    // Update files list
+                    updateFilesList();
+
+                    // Clear inputs
+                    document.getElementById('fileName').value = '';
+                    document.getElementById('encryptFile').checked = false;
+                    fileInputElement.value = '';
+
+                    // Hide success message after 3 seconds
+                    setTimeout(() => {
+                        statusDiv.innerHTML = '';
+                    }, 3000);
+                }
+            })
+            .catch(error => {
+                alert('Error uploading file: ' + error);
+            });
+        }
+
+        function updateFilesList() {
+            const filesList = document.getElementById('filesList');
+            
+            if (uploadedFilesList.length === 0) {
+                filesList.innerHTML = '<p class="no-files">No files uploaded yet</p>';
+                return;
+            }
+
+            filesList.innerHTML = uploadedFilesList.map((file, index) => `
+                <div class="file-item">
+                    <div class="file-info">
+                        <div class="file-icon">📄</div>
+                        <div class="file-details">
+                            <h5>${file.name}</h5>
+                            <p>${file.size} MB • ${file.date} ${file.time} ${file.encrypted ? '🔒 Encrypted' : '🔓 Not Encrypted'}</p>
+                        </div>
+                    </div>
+                    <button class="btn-delete" onclick="deleteFile(${index})">Delete</button>
+                </div>
+            `).join('');
+        }
+
+        function deleteFile(index) {
+            uploadedFilesList.splice(index, 1);
+            updateFilesList();
+        }
+
+        // Voice Search
+        function startVoice() {
+            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = "en-US";
+
+            recognition.onstart = function() {
+                document.getElementById("searchBox").placeholder = "Listening...";
+            };
+
+            recognition.onresult = function(event) {
+                document.getElementById("searchBox").value = event.results[0][0].transcript;
+                document.getElementById("searchBox").placeholder = "Type your query...";
+                searchKeyword();
+            };
+
+            recognition.onerror = function(event) {
+                alert("Error: " + event.error);
+                document.getElementById("searchBox").placeholder = "Type your query...";
+            };
+
+            recognition.start();
+        }
+
+        // Search Function
+        function searchKeyword() {
+            const query = document.getElementById("searchBox").value;
+            
+            if (!query.trim()) {
+                alert("Please enter a search query");
+                return;
+            }
+
+            const resultDiv = document.getElementById("result") || document.getElementById("voice-result");
+            resultDiv.innerHTML = '<div class="loading">🔄 Searching...</div>';
+
+            fetch("/search", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ query: query })
+            })
+            .then(response => response.json())
+            .then(data => {
+                resultDiv.innerHTML = `
+                    <div class="result-box">
+                        <h4>Original:</h4>
+                        <p class="original-text">${data.original}</p>
+                        <h4>Corrected:</h4>
+                        <p class="corrected-text">${data.corrected}</p>
+                        <button class="btn-download" onclick="downloadSearchResult('${data.original}', '${data.corrected}')">📥 Download Result</button>
+                    </div>
+                `;
+            })
+            .catch(error => {
+                resultDiv.innerHTML = `<div class="error">Error: ${error}</div>`;
+            });
+        }
+
+        // Allow Enter key to search
+        document.getElementById("searchBox").addEventListener("keypress", function(e) {
+            if (e.key === "Enter") {
+                searchKeyword();
+            }
+        });
+
+        // Download search results
+        function downloadSearchResult(original, corrected) {
+            const content = `Search Results\n===============\n\nOriginal Query:\n${original}\n\nCorrected Query:\n${corrected}\n\nGenerated on: ${new Date().toLocaleString()}`;
+            
+            const element = document.createElement('a');
+            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(content));
+            element.setAttribute('download', `search-result-${Date.now()}.txt`);
+            element.style.display = 'none';
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+        }
+    </script>
+</body>
+</html>

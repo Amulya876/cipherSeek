@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrivSeek - Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px;
+        }
+
+        .wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .left-section {
+            color: white;
+            animation: slideInLeft 0.8s ease-out;
+        }
+
+        .logo-area {
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            font-size: 100px;
+            margin-bottom: 15px;
+            display: inline-block;
+            animation: float 3s ease-in-out infinite;
+            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.2));
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .logo-area h1 {
+            font-size: 60px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            letter-spacing: -2px;
+        }
+
+        .logo-area p {
+            font-size: 24px;
+            font-weight: 300;
+            opacity: 0.95;
+            margin-bottom: 30px;
+        }
+
+        .description {
+            font-size: 16px;
+            line-height: 1.8;
+            opacity: 0.9;
+            margin-bottom: 40px;
+            max-width: 400px;
+        }
+
+        .highlights {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .highlight-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            transform: translateX(0);
+        }
+
+        .highlight-item:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateX(10px);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .highlight-icon {
+            font-size: 32px;
+            min-width: 32px;
+        }
+
+        .highlight-text {
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .right-section {
+            animation: slideInRight 0.8s ease-out;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 50px 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(20px);
+        }
+
+        .card-header {
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .card-header h2 {
+            font-size: 36px;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .card-header p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .login-options {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            margin-bottom: 35px;
+        }
+
+        .login-option {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 22px 28px;
+            border-radius: 15px;
+            text-decoration: none;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .login-option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: left 0.4s ease;
+            z-index: 0;
+        }
+
+        .login-option:hover::before {
+            left: 100%;
+        }
+
+        .user-option {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .user-option:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+        }
+
+        .admin-option {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .admin-option:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(245, 87, 108, 0.4);
+        }
+
+        .option-icon {
+            font-size: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .option-content {
+            flex: 1;
+            position: relative;
+            z-index: 1;
+        }
+
+        .option-title {
+            font-size: 18px;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .option-desc {
+            font-size: 13px;
+            opacity: 0.95;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 30px 0;
+            color: #ddd;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #ddd;
+        }
+
+        .divider-text {
+            font-size: 14px;
+            color: #999;
+        }
+
+        .signup-section {
+            text-align: center;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 12px;
+        }
+
+        .signup-text {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .signup-link {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .signup-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .wrapper {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .left-section {
+                text-align: center;
+            }
+
+            .logo-area h1 {
+                font-size: 44px;
+            }
+
+            .logo {
+                font-size: 70px;
+            }
+
+            .description {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .highlights {
+                max-width: 400px;
+                margin: 0 auto;
+            }
+
+            .card {
+                padding: 35px 25px;
+            }
+
+            .card-header h2 {
+                font-size: 28px;
+            }
+
+            .login-option {
+                padding: 18px 20px;
+            }
+
+            .option-icon {
+                font-size: 32px;
+            }
+
+            .option-title {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="wrapper">
+            <div class="left-section">
+                <div class="logo-area">
+                    <div class="logo">🔐</div>
+                    <h1>PrivSeek</h1>
+                    <p>Privacy First</p>
+                </div>
+
+                <div class="description">
+                    Secure, encrypted file storage and intelligent search. Your data, your control. Experience privacy without compromise.
+                </div>
+
+                <div class="highlights">
+                    <div class="highlight-item">
+                        <span class="highlight-icon">🔒</span>
+                        <span class="highlight-text">Military-grade encryption</span>
+                    </div>
+                    <div class="highlight-item">
+                        <span class="highlight-icon">⚡</span>
+                        <span class="highlight-text">Lightning-fast search</span>
+                    </div>
+                    <div class="highlight-item">
+                        <span class="highlight-icon">🎤</span>
+                        <span class="highlight-text">Voice search enabled</span>
+                    </div>
+                    <div class="highlight-item">
+                        <span class="highlight-icon">📊</span>
+                        <span class="highlight-text">Real-time admin control</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Get Started</h2>
+                        <p>Choose your account type</p>
+                    </div>
+
+                    <div class="login-options">
+                        <a href="/user-login" class="login-option user-option">
+                            <span class="option-icon">👤</span>
+                            <div class="option-content">
+                                <span class="option-title">User Account</span>
+                                <span class="option-desc">Search and upload files</span>
+                            </div>
+                            <span style="font-size: 20px; position: relative; z-index: 1;">→</span>
+                        </a>
+
+                        <a href="/admin-login" class="login-option admin-option">
+                            <span class="option-icon">👨‍💼</span>
+                            <div class="option-content">
+                                <span class="option-title">Admin Account</span>
+                                <span class="option-desc">Monitor and manage system</span>
+                            </div>
+                            <span style="font-size: 20px; position: relative; z-index: 1;">→</span>
+                        </a>
+                    </div>
+
+                    <div class="divider">
+                        <span class="divider-text">New here?</span>
+                    </div>
+
+                    <div class="signup-section">
+                        <p class="signup-text">Create a new user account to get started</p>
+                        <a href="/user-login" class="signup-link">Sign Up Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

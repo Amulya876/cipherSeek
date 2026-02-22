@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrivSeek Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">🔐</div>
+                <h1 class="logo-text">PrivSeek</h1>
+                <span class="admin-badge">ADMIN</span>
+            </div>
+            
+            <nav class="sidebar-menu">
+                <a href="#" class="menu-item active" data-page="overview">
+                    <span class="menu-icon">📊</span>
+                    <span>Overview</span>
+                </a>
+                <a href="#" class="menu-item" data-page="uploads">
+                    <span class="menu-icon">📁</span>
+                    <span>All Uploads</span>
+                </a>
+                <a href="#" class="menu-item" data-page="users">
+                    <span class="menu-icon">👥</span>
+                    <span>Users</span>
+                </a>
+                <a href="#" class="menu-item" data-page="analytics">
+                    <span class="menu-icon">📈</span>
+                    <span>Analytics</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="/logout" class="btn-logout">Logout</a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="dashboard-header">
+                <h2 id="page-title">Admin Overview</h2>
+                <div class="user-profile">
+                    <span class="user-avatar">👨‍💼</span>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="dashboard-content">
+                <!-- Overview Page -->
+                <div class="page-content active" id="overview-page">
+                    <div class="admin-stats">
+                        <div class="stat-card">
+                            <div class="stat-icon">📤</div>
+                            <div class="stat-content">
+                                <h4>Total Uploads</h4>
+                                <p class="stat-number" id="total-uploads">0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon"></div>
+                            <div class="stat-content">
+                                <h4>Active Users</h4>
+                                <p class="stat-number" id="active-users">0</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="admin-chart">
+                        <h3>Encryption Status Distribution</h3>
+                        <canvas id="encryptionChart" style="max-width: 400px; margin: 20px auto;"></canvas>
+                    </div>
+                </div>
+
+                <!-- Uploads Page -->
+                <div class="page-content" id="uploads-page">
+                    <div class="search-card">
+                        <div class="search-header" style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h3>📁 All Uploaded Files</h3>
+                                <p>Monitor all files uploaded by users</p>
+                            </div>
+                            <button class="btn-refresh" onclick="refreshUploads()" title="Refresh uploads list">🔄 Refresh</button>
+                        </div>
+
+                        <div class="uploads-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>User</th>
+                                        <th>File Name</th>
+                                        <th>Size (MB)</th>
+                                        <th>Uploaded</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="uploadsTableBody">
+                                    <tr>
+                                        <td colspan="5" style="text-align: center; padding: 20px;">Loading uploads...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Users Page -->
+                <div class="page-content" id="users-page">
+                    <div class="search-card">
+                        <div class="search-header">
+                            <h3>👥 Users Management</h3>
+                            <p>View and manage all system users</p>
+                        </div>
+
+                        <div class="uploads-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>User ID</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="usersTableBody">
+                                    <tr>
+                                        <td colspan="4" style="text-align: center; padding: 20px;">Loading users...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analytics Page -->
+                <div class="page-content" id="analytics-page">
+                    <div class="search-card">
+                        <div class="search-header">
+                            <h3>📈 Analytics</h3>
+                            <p>Detailed system analytics and insights</p>
+                        </div>
+
+                        <div class="analytics-container">
+                            <div class="analytics-item">
+                                <h4>Upload Distribution</h4>
+                                <p id="upload-stats">Loading analytics...</p>
+                            </div>
+                            <div class="analytics-item">
+                                <h4>Security Overview</h4>
+                                <p id="security-stats">Loading analytics...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Load and refresh users list
+        function loadUsers() {
+            console.log('Loading users...');
+            fetch('/get-all-users')
+                .then(response => {
+                    console.log('Response status:', response.status);
+                    if (!response.ok) {
+                        return response.json().then(err => {
+                            throw new Error(JSON.stringify(err));
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Users data received:', data);
+                    const tbody = document.getElementById('usersTableBody');
+                    
+                    if (data.users && data.users.length > 0) {
+                        tbody.innerHTML = data.users.map(user => `
+                            <tr>
+                                <td>${user.id}</td>
+                                <td>${user.name}</td>
+                                <td>${user.email}</td>
+                                <td><span class="status-badge">${user.role.toUpperCase()}</span></td>
+                            </tr>
+                        `).join('');
+                    } else {
+                        tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px;">No users found</td></tr>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading users:', error);
+                    document.getElementById('usersTableBody').innerHTML = 
+                        '<tr><td colspan="4" style="text-align: center; padding: 20px; color: red;">Error: ' + error.message + '</td></tr>';
+                });
+        }
+
+        // Load and refresh uploads list
+        function refreshUploads() {
+            fetch('/get-all-uploads')
+                .then(response => response.json())
+                .then(data => {
+                    const tbody = document.getElementById('uploadsTableBody');
+                    
+                    if (data.uploads && data.uploads.length > 0) {
+                        tbody.innerHTML = data.uploads.map(upload => `
+                            <tr>
+                                <td>${upload.name}</td>
+                                <td>${upload.filename}</td>
+                                <td>${upload.file_size}</td>
+                                <td>${upload.upload_date}</td>
+                                <td>
+                                    <span class="status-badge ${upload.is_encrypted ? 'encrypted' : 'unencrypted'}">
+                                        ${upload.is_encrypted ? '🔒 Encrypted' : '🔓 Not Encrypted'}
+                                    </span>
+                                </td>
+                            </tr>
+                        `).join('');
+                    } else {
+                        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">No uploads yet</td></tr>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading uploads:', error);
+                    document.getElementById('uploadsTableBody').innerHTML = 
+                        '<tr><td colspan="5" style="text-align: center; padding: 20px; color: red;">Error loading uploads</td></tr>';
+                });
+        }
+
+        // Load admin statistics
+        function loadAdminStats() {
+            fetch('/get-admin-stats')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('total-uploads').textContent = data.total_uploads;
+                    document.getElementById('active-users').textContent = data.total_users;
+
+                    // Create chart
+                    const ctx = document.getElementById('encryptionChart').getContext('2d');
+                    new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['Encrypted', 'Unencrypted'],
+                            datasets: [{
+                                data: [data.encrypted, data.unencrypted],
+                                backgroundColor: ['#10b981', '#ef4444'],
+                                borderColor: ['#059669', '#dc2626'],
+                                borderWidth: 2
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom'
+                                }
+                            }
+                        }
+                    });
+
+                    // Update analytics
+                    document.getElementById('upload-stats').textContent = 
+                        `Total: ${data.total_uploads} | Encrypted: ${data.encrypted} | Unencrypted: ${data.unencrypted}`;
+                    document.getElementById('security-stats').textContent = 
+                        `Encryption Rate: ${((data.encrypted / data.total_uploads * 100) || 0).toFixed(1)}% | Active Users: ${data.total_users}`;
+                });
+        }
+
+        // Navigation
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+                this.classList.add('active');
+                
+                document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
+                
+                const page = this.dataset.page;
+                const titles = {
+                    'overview': 'Admin Overview',
+                    'uploads': 'All Uploads',
+                    'users': 'Users Management',
+                    'analytics': 'Analytics'
+                };
+                
+                document.getElementById('page-title').textContent = titles[page];
+                document.getElementById(page + '-page').classList.add('active');
+                
+                // Refresh data when navigating to specific pages
+                if (page === 'uploads') {
+                    refreshUploads();
+                } else if (page === 'users') {
+                    loadUsers();
+                }
+            });
+        });
+
+        // Load stats and uploads on page load
+        window.addEventListener('load', function() {
+            loadAdminStats();
+            refreshUploads();
+            
+            // Auto-refresh uploads every 5 seconds
+            setInterval(refreshUploads, 5000);
+        });
+    </script>
+</body>
+</html>
